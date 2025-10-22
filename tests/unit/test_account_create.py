@@ -22,13 +22,21 @@ class TestAccount:
         assert account.pesel == "Invalid"
 
     def test_promo_good(self):
-        account = Account("John", "Doe", "12345678909", "PROM_123")
+        account = Account("John", "Doe", "92345678909", "PROM_123")
         assert account.balance == 50.0
 
     def test_promo_length(self):
-        account = Account("John", "Doe", "12345678909", "PROM_12453")
+        account = Account("John", "Doe", "92345678909", "PROM_12453")
         assert account.balance == 0.0
 
     def test_promo_correct_prefix(self):
-        account = Account("John", "Doe", "12345678909", "PORM_153")
+        account = Account("John", "Doe", "92345678909", "PORM_153")
+        assert account.balance == 0.0
+
+    def test_correct_age(self):
+        account = Account("John", "Doe", "95345678909", "PROM_153")
+        assert account.balance == 50.0
+
+    def test_wrong_age(self):
+        account = Account("John", "Doe", "12345678909", "PROM_153")
         assert account.balance == 0.0
