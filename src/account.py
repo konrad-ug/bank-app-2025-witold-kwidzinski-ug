@@ -4,6 +4,21 @@ class Account:
         self.last_name = last_name
         self.pesel = pesel if self.is_pesel_valid(pesel) else "Invalid"
         self.balance = 50.0 if self.is_promo_valid(promo_code) and self.can_pesel_promo(pesel) else 0.0
+        self.transfer_history = []
+
+    def incoming_transfer(self,amount):
+        self.balance += amount
+
+    def outgoing_transfer(self, amount):
+        new_balance = self.balance - amount
+        if amount > 0 and new_balance >= 0:
+            self.transfer_history.append(new_balance)
+            self.balance = new_balance
+
+
+
+
+
 
     def is_pesel_valid(self, pesel):
         if pesel and len(pesel) == 11:
