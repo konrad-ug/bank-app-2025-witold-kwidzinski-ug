@@ -7,6 +7,7 @@ class PersonalAccount(Account):
         self.last_name = last_name
         self.pesel = pesel if self.is_pesel_valid(pesel) else "Invalid"
         self.balance += 50.0 if self.is_promo_valid(promo_code) and self.can_pesel_promo(pesel) else 0.0
+        self.express_fee = 1.0
 
 
     def is_pesel_valid(self, pesel):
