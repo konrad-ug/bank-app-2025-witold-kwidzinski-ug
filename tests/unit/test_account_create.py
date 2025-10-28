@@ -1,64 +1,44 @@
-from src.account import Account
+from src.personal_account import PersonalAccount
 
 
-class TestAccount:
-    def test_account_creation(self):
-        account = Account("John", "Doe", "12345678909")
+class TestPersonalAccount:
+    def test_PersonalAccount_creation(self):
+        account = PersonalAccount("John", "Doe", "12345678909")
         assert account.first_name == "John"
         assert account.last_name == "Doe"
         assert account.balance == 0.0
         assert account.pesel == "12345678909"
 
     def test_pesel_too_long(self):
-        account = Account("Joe", "Dohn", "1234567890987")
+        account = PersonalAccount("Joe", "Dohn", "1234567890987")
         assert account.pesel == "Invalid"
 
     def test_pesel_too_short(self):
-        account = Account("Joe", "Dohn", "1234587")
+        account = PersonalAccount("Joe", "Dohn", "1234587")
         assert account.pesel == "Invalid"
 
     def test_pesel_empty(self):
-        account = Account("Joe", "Dohn", "")
+        account = PersonalAccount("Joe", "Dohn", "")
         assert account.pesel == "Invalid"
 
     def test_promo_good(self):
-        account = Account("John", "Doe", "92345678909", "PROM_123")
+        account = PersonalAccount("John", "Doe", "92345678909", "PROM_123")
         assert account.balance == 50.0
 
     def test_promo_length(self):
-        account = Account("John", "Doe", "92345678909", "PROM_12453")
+        account = PersonalAccount("John", "Doe", "92345678909", "PROM_12453")
         assert account.balance == 0.0
 
     def test_promo_correct_prefix(self):
-        account = Account("John", "Doe", "92345678909", "PORM_153")
+        account = PersonalAccount("John", "Doe", "92345678909", "PORM_153")
         assert account.balance == 0.0
 
     def test_correct_age(self):
-        account = Account("John", "Doe", "95345678909", "PROM_153")
+        account = PersonalAccount("John", "Doe", "95345678909", "PROM_153")
         assert account.balance == 50.0
 
     def test_wrong_age(self):
-        account = Account("John", "Doe", "12345678909", "PROM_153")
+        account = PersonalAccount("John", "Doe", "12345678909", "PROM_153")
         assert account.balance == 0.0
 
 
-class TestTransfers:
-    def test_incoming_transfer(self):
-        account = Account("John", "Doe", "12345678909") #1. set up
-        account.incoming_transfer(25.0) #2. action
-        assert account.balance == 25.0 #3. assertion
-    def test_outgoing_transfer_sufficient_balance(self):
-        account = Account("John", "Doe", "12345678909")
-        account.balance = 100
-        account.outgoing_transfer(50.0)
-        assert account.balance == 50.0
-    def test_outgoing_transfer_insufficient_balance(self):
-        account = Account("John", "Doe", "92345678909")
-        account.incoming_transfer(25.0)
-        account.outgoing_transfer(50.0)
-        assert account.balance == 25.0
-    def test_outgoing_transfer_negative(self):
-        account = Account("John", "Doe", "92345678909")
-        account.incoming_transfer(25.0)
-        account.outgoing_transfer(-50.0)
-        assert account.balance == 25.0
