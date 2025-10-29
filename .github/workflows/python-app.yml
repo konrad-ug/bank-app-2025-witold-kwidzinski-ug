@@ -37,4 +37,4 @@ jobs:
     - name: Test with pytest
       run: |
         python -m coverage run --source=src -m pytest
-        python -m coverage report -m --fall-under=100
+        python -m coverage report -m --fail-under=100
