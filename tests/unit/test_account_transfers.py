@@ -39,3 +39,22 @@ class TestAccountTransfers:
         account.express_transfer(50.0)
         assert account.balance == 0.0
 
+    def test_add_incoming_to_history(self):
+        account = Account()
+        account.incoming_transfer(50.0)
+
+        assert account.history == [50.0]
+
+    def test_add_outcoming_to_history(self):
+        account = Account()
+        account.incoming_transfer(50.0)
+        account.outgoing_transfer(25.0)
+
+        assert account.history == [50.0, -25.0]
+
+    def test_add_express_transfer_to_history(self):
+        account = PersonalAccount("John", "Doe", "12345678909")
+        account.incoming_transfer(50.0)
+        account.express_transfer(25.0)
+
+        assert account.history == [50.0, -25.0, -1]
