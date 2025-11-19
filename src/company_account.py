@@ -9,6 +9,11 @@ class CompanyAccount(Account):
         self.express_fee = 5.0
 
 
+    def take_loan(self, amount):
+        if amount > 0 and self.balance >= amount * 2 and -1775 in self.history:
+            self.balance += amount
+            return True
+        return False
 
     def is_nip_valid(self, nip):
         if nip is not None and len(nip) == 10:

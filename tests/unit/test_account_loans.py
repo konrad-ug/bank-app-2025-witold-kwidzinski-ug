@@ -1,4 +1,5 @@
 from src.personal_account import PersonalAccount
+from src.company_account import CompanyAccount
 import pytest
 
 class TestAccountLoans:
@@ -32,3 +33,24 @@ class TestAccountLoans:
         account.history = [50.0, 80.0, -30.0, 20.0, -40.0]
 
         assert account.submit_for_loan(100.0) == False
+
+
+
+    @pytest.mark.parametrize("balance,loan,history,expected",
+                             [(100, -48, [3, 18, 25, -14, -1775], False),
+                              (84, 50, [3, 18, 25, -14, -1775], False),
+                              (100, 48, [3, 18, 25, -14], False),
+                              (100, 48, [3, 18, 25, -14, -1775], True)],
+                             ids= [
+                                 "negative loan",
+                                 "loan amount too big",
+                                 "no zus payment",
+                                 "everything correct"
+                             ])
+
+    def test_company_loan(self, balance, loan, history, expected):
+        company_account = CompanyAccount("company", "1234567890")
+        company_account.balance = balance
+        company_account.history = history
+
+        assert company_account.take_loan(loan) == expected
