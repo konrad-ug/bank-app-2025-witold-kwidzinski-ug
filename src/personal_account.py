@@ -10,6 +10,36 @@ class PersonalAccount(Account):
         self.express_fee = 1.0
 
 
+    def submit_for_loan(self, amount):
+        def loan1():
+            if len(self.history) >= 3:
+                for i in range(-1, -4, -1):
+                    if self.history[i] < 0:
+                        return False
+                return True
+
+            return False
+
+        def loan2(a):
+            if len(self.history) >= 5:
+                suma = 0
+                for i in range(-1, -6, -1):
+                    suma += self.history[i]
+                if suma > a:
+                    return True
+                return False
+
+        if loan1() or loan2(amount):
+            self.balance += amount
+            return True
+        return False
+
+
+
+
+
+
+
     def is_pesel_valid(self, pesel):
         if pesel and len(pesel) == 11:
             return True
