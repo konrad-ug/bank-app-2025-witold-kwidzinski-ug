@@ -1,0 +1,67 @@
+from flask import Flask, request, jsonify
+from src.account_registry import AccountRegistry
+from src.personal_account import PersonalAccount
+
+
+app = Flask(__name__)
+registry = AccountRegistry()
+
+@app.route("/api/accounts", methods=['POST'])
+def create_account():
+    data = request.get_json()
+    print(f"Create account request: {data}")
+    account = PersonalAccount(data["first_name"], data["last_name"], data["pesel"])
+    registry.add_account(account)
+    return jsonify({"message": "Account created"}), 201
+
+@app.route("/api/accounts", methods=['GET'])
+def get_all_accounts():
+    print("Get all accounts request received")
+    accounts = registry.get_all_accounts()
+    accounts_data = [{"first_name": acc.name,
+                      "last_name": acc.last_name,
+                      "pesel": acc.pesel,
+                      "balance": acc.balance} for acc in accounts]
+    return jsonify(accounts_data), 200
+#
+@app.route("/api/accounts/count", methods=['GET'])
+def get_account_count():
+    print("Get account count request received")
+    count = registry.get_account_count()
+    return jsonify({"count": count}), 200
+#
+@app.route("/api/accounts/<pesel>", methods=['GET'])
+def get_account_by_pesel(pesel):
+    acc = registry.get_account_by_pesel(pesel)
+    if acc is None:
+        return jsonify("No account found."), 404
+
+    return jsonify({"first_name": acc.first_name, "last_name": acc.last_name, "pesel": acc.pesel, "balance": acc.balance}), 200
+#
+@app.route("/api/accounts/<pesel>", methods=['PATCH'])
+def update_account(pesel):
+    acc = registry.get_account_by_pesel(pesel)
+
+    if acc is None:
+        return jsonify("No account found."), 404
+
+    data = request.get_json()
+
+    for el in data.keys():
+        if el == "pesel":
+            return jsonify("Update error. Can't update pesel"), 405
+
+    for el, val in data.items():
+        setattr(acc, el, val)
+
+    return jsonify("Account updated"), 200
+#
+@app.route("/api/accounts/<pesel>", methods=['DELETE'])
+def delete_account(pesel):
+    for el in registry.get_all_accounts():
+        if el.pesel == pesel:
+            registry.get_all_accounts().remove(el)
+            return jsonify("Account deleted"), 200
+
+    return jsonify("No account found."), 404
+
