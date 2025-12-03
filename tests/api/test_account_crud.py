@@ -20,6 +20,13 @@ class TestApiCrud:
         assert response.status_code == 201
         assert response.json()["message"] == "Account created"
 
+    def test_create_account_same_pesel(self, account_data):
+
+        url = "http://localhost:5000/api/accounts"
+
+        response = requests.post(url, json=account_data)
+        assert response.status_code == 409
+        assert response.json() == "Account with this pesel already exists."
 
     def test_count(self):
         url = "http://localhost:5000/api/accounts/count"
