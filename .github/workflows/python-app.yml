@@ -37,5 +37,5 @@ jobs:
     - name: Test with pytest
       run: |
         flask --app app.api --debug run
-        python -m coverage run --source=src -m pytest
+        python3 -m coverage run --source=src -m pytest tests/unit
         # python -m coverage report -m --fall-under=100
