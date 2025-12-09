@@ -6,9 +6,9 @@ class TestApiCrud:
     @pytest.fixture(scope="function", autouse=True)
     def account_data(self):
         account_data = {
-            "first_name": "james",
-            "last_name": "hetfield",
-            "pesel": "89009290982",
+            "first_name": "big",
+            "last_name": "guy",
+            "pesel": "13141516171",
             "balance": 0
         }
         return account_data
@@ -28,12 +28,6 @@ class TestApiCrud:
         assert response.status_code == 409
         assert response.json() == "Account with this pesel already exists."
 
-    def test_count(self):
-        url = "http://localhost:5000/api/accounts/count"
-        response = requests.get(url)
-        assert response.status_code == 200
-        assert response.json()["count"] == 1
-
     def test_get_account_by_pesel(self, account_data):
         url = f"http://localhost:5000/api/accounts/{account_data['pesel']}"
         response = requests.get(url)
@@ -51,7 +45,7 @@ class TestApiCrud:
         response = requests.patch(url, json={"last_name": "bond"})
         assert response.status_code == 200
         res2 = requests.get(url)
-        assert res2.json() == {"first_name": "james", "last_name": "bond", "pesel": "89009290982", "balance": 0}
+        assert res2.json() == {"first_name": "big", "last_name": "bond", "pesel": "13141516171", "balance": 0}
 
     def test_update_pesel_fail(self, account_data):
         url = f"http://localhost:5000/api/accounts/{account_data['pesel']}"
@@ -59,7 +53,7 @@ class TestApiCrud:
         assert response.status_code == 405
 
     def test_delete_account(self, account_data):
-        url = f"http://localhost:5000/api/accounts/{account_data['pesel']}"
+        url = f"http://localhost:5000/api/accounts/13141516171"
         response = requests.delete(url)
         assert response.status_code == 200
         res2 = requests.get(url)

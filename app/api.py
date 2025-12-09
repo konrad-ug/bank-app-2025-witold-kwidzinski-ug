@@ -16,6 +16,8 @@ def create_account():
             return jsonify("Account with this pesel already exists."), 409
 
     account = PersonalAccount(data["first_name"], data["last_name"], data["pesel"])
+    if "balance" in data:
+        account.balance = data["balance"]
     registry.add_account(account)
     return jsonify({"message": "Account created"}), 201
 
@@ -70,3 +72,28 @@ def delete_account(pesel):
 
     return jsonify("No account found."), 404
 
+@app.route("/api/accounts/<pesel>/transfer", methods=['POST'])
+def account_transfer(pesel):
+    acc = registry.get_account_by_pesel(pesel)
+    if acc is None:
+        return jsonify("Account not found."), 404
+
+    data = request.get_json()
+
+    if data["type"] == "incoming":
+        acc.incoming_transfer(data["amount"])
+        return jsonify("Zlecenie przyjęto do realizacji."), 200
+    elif data["type"] == "outgoing":
+        tempbalance = acc.balance
+        acc.outgoing_transfer(data["amount"])
+        if acc.balance == tempbalance:
+            return jsonify("Insufficient funds."), 422
+        return jsonify("Zlecenie przyjęto do realizacji."), 200
+    elif data["type"] == "express":
+        tempbalance = acc.balance
+        acc.express_transfer(data["amount"])
+        if acc.balance == tempbalance:
+            return jsonify("Insufficient funds."), 422
+        return jsonify("Zlecenie przyjęto do realizacji."), 200
+    else:
+        return jsonify("Zły typ przelewu."), 406
