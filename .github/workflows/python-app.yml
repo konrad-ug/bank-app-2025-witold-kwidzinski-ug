@@ -36,6 +36,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        flask --app app.api --debug run
+        flask --app app.api --debug run &
+        sleep 5
         python3 -m coverage run --source=src -m pytest tests/unit
         # python -m coverage report -m --fall-under=100
