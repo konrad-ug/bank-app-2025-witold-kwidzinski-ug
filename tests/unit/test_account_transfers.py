@@ -1,6 +1,7 @@
 from src.account import Account
 from src.personal_account import PersonalAccount
 from src.company_account import CompanyAccount
+from pytest_mock import mocker
 
 class TestAccountTransfers:
     def test_incoming_transfer(self):
@@ -22,7 +23,11 @@ class TestAccountTransfers:
         account.incoming_transfer(25.0)
         account.outgoing_transfer(-50.0)
         assert account.balance == 25.0
-    def test_express_transfer(self):
+    def test_express_transfer(self, mocker):
+        mock = mocker.patch('src.company_account.requests.get')
+
+        mock.return_value.status_code = 200
+        mock.return_value.json.return_value = {"result": {"subject": {"statusVat": "Czynny"}}}
         account = PersonalAccount("John", "Doe", "12345678909")
         account2 = CompanyAccount("company", "1234567890")
 
