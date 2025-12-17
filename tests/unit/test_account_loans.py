@@ -1,6 +1,7 @@
 from src.personal_account import PersonalAccount
 from src.company_account import CompanyAccount
 import pytest
+from pytest_mock import mocker
 
 class TestAccountLoans:
 
@@ -48,7 +49,11 @@ class TestAccountLoans:
                                  "everything correct"
                              ])
 
-    def test_company_loan(self, balance, loan, history, expected):
+    def test_company_loan(self, balance, loan, history, expected, mocker):
+        mock = mocker.patch('src.company_account.requests.get')
+
+        mock.return_value.status_code = 200
+        mock.return_value.json.return_value = {"result": {"subject": {"statusVat": "Czynny"}}}
         company_account = CompanyAccount("company", "1234567890")
         company_account.balance = balance
         company_account.history = history
