@@ -5,6 +5,7 @@ import requests
 
 class CompanyAccount(Account):
     BANK_APP_MF_URL = os.getenv("BANK_APP_MF_URL", "https://wl-test.mf.gov.pl/")
+    history_email_template = "Company"
     def __init__(self, company_name, nip):
         super().__init__()
         self.company_name = company_name
