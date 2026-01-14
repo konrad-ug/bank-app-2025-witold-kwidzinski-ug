@@ -1,4 +1,4 @@
-from lib.smtp import SMTPClient
+from libraries.smtp import SMTPClient
 from datetime import datetime
 
 class Account:
