@@ -38,5 +38,4 @@ jobs:
       run: |
         flask --app app.api --debug run &
         sleep 5
-        python3 -m coverage run --source=src -m pytest tests/unit
-        # python -m coverage report -m --fall-under=100
+        python -m unittest tests/perf/test_perf.py
