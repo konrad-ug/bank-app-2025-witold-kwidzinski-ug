@@ -20,7 +20,7 @@ jobs:
       mongo:
         image: mongo:6.0
         ports:
-          - 27017:27017
+          - 0:27017
 
     steps:
     - uses: actions/checkout@v4
